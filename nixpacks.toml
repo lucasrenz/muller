@@ -4,7 +4,7 @@ cmd = "npm run build"
 
 [start]
 # Comando para iniciar a aplicação
-cmd = "npx serve dist --listen $PORT"
+cmd = "npm run start"
 
 [environment]
 # Variáveis de ambiente necessárias (adicione conforme necessário)
