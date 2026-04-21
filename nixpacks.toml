@@ -4,8 +4,13 @@ cmd = "npm run build"
 
 [start]
 # Comando para iniciar a aplicação
-cmd = "npm run start"
+cmd = "npx serve dist --listen $PORT"
 
 [environment]
 # Variáveis de ambiente necessárias (adicione conforme necessário)
 # NODE_ENV = "production"
+PORT = "3000"
+
+[web]
+  engine = "nginx"
+  root = "dist"

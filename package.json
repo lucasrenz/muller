@@ -9,7 +9,7 @@
     "preview": "vite preview --host :: --port 3000",
     "lint": "eslint . --quiet",
     "lint:warn": "eslint .",
-    "start": "vite preview --host :: --port 3000"
+    "start": "npx serve dist --listen $PORT"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.4",
