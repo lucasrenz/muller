@@ -12,6 +12,9 @@ import WebhookConfigPage from '@/pages/WebhookConfigPage';
 import ImageConfigPage from '@/pages/ImageConfigPage';
 import VagasPage from '@/pages/VagasPage';
 import OperatorRH from '@/pages/OperatorRH';
+import OperatorJuridico from '@/pages/OperatorJuridico';
+import DenunciaPage from '@/pages/DenunciaPage';
+import ConsultarDenunciaPage from '@/pages/ConsultarDenunciaPage';
 
 function App() {
   return (
@@ -67,8 +70,20 @@ function App() {
             }
           />
           
+          {/* Rotas protegidas para Jurídico */}
+          <Route
+            path="/operator-juridico"
+            element={
+              <ProtectedRoute requiredRole="juridico">
+                <OperatorJuridico />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Rotas públicas */}
           <Route path="/vagas" element={<VagasPage />} />
+          <Route path="/denuncia" element={<DenunciaPage />} />
+          <Route path="/consultar-denuncia" element={<ConsultarDenunciaPage />} />
         </Routes>
       </AuthProvider>
     </Router>

@@ -248,6 +248,7 @@ const SignUpPage = () => {
             >
               <option value="rh">RH (Recursos Humanos)</option>
               <option value="financeiro">Financeiro</option>
+              <option value="juridico">Juridico</option>
             </select>
             {errors.tipo && (
               <p className="mt-1 text-xs text-red-600">{errors.tipo}</p>

@@ -13,6 +13,8 @@ export const getDefaultRouteByRole = (userType) => {
       return '/operator-rh';
     case 'financeiro':
       return '/operator-dashboard';
+    case 'juridico':
+      return '/operator-juridico';
     default:
       return '/login';
   }

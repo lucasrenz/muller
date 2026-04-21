@@ -195,8 +195,8 @@ export const AuthProvider = ({ children }) => {
         return { error: validationError };
       }
 
-      if (!['rh', 'financeiro'].includes(tipo)) {
-        const typeError = new Error('Tipo deve ser "rh" ou "financeiro".');
+      if (!['rh', 'financeiro', 'juridico'].includes(tipo)) {
+        const typeError = new Error('Tipo deve ser "rh", "financeiro" ou "juridico".');
         toast({
           variant: 'destructive',
           title: 'Tipo inválido',
