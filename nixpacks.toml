@@ -1,6 +1,6 @@
 [build]
 # Comando para construir a aplicação
-cmd = "npm run build"
+cmd = "npm install && npm run build"
 
 [start]
 # Comando para iniciar a aplicação
