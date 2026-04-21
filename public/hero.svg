@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0%" stop-color="#c53d2a" />
+      <stop offset="100%" stop-color="#8b2d20" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)" />
+  <g transform="translate(80,120) scale(0.9)">
+    <rect x="0" y="0" width="440" height="260" rx="18" fill="#ffffff22" />
+    <rect x="60" y="40" width="320" height="200" rx="12" fill="#ffffff22" transform="rotate(-18 220 140)" />
+  </g>
+  <text x="60" y="700" font-family="DM Sans, Arial, sans-serif" font-size="44" fill="#fff" font-weight="700">Imagem indisponível</text>
+</svg>
