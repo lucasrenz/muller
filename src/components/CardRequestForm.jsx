@@ -570,6 +570,8 @@ const CardRequestForm = () => {
               <a className="text-base font-semibold text-slate-600 hover:text-brand-500 transition-colors" href="#lojas">Nossas Lojas</a>
               <a className="text-base font-semibold text-slate-600 hover:text-brand-500 transition-colors" href="#simulador">Simulador</a>
               <a className="text-base font-semibold text-slate-600 hover:text-brand-500 transition-colors" href="/vagas">Vagas</a>
+              <a className="text-base font-semibold text-slate-600 hover:text-brand-500 transition-colors" href="/denuncia">Denúncie</a>
+
             </nav>
             <div className="flex items-center space-x-4">
               <a 
