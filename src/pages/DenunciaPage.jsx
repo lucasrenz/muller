@@ -149,10 +149,10 @@ export default function DenunciaPage() {
         .denuncia-input:focus { outline: none; border-color: transparent; box-shadow: 0 0 0 2px rgba(255,140,0,0.15); background-color: #ffffff; }
         .denuncia-input::placeholder { color: rgba(86,67,52,0.5); }
         .denuncia-select { appearance: none; }
-        .denuncia-fieldset { background-color: #f3f4f5; padding: 1.5rem; border-radius: 1rem; display: flex; flex-direction: column; gap: 1.5rem; border: none; }
-        @media (min-width: 768px) { .denuncia-fieldset { padding: 2rem; } }
+        .denuncia-fieldset { background-color: #f3f4f5; padding: 1.75rem 1.5rem 1.5rem; border-radius: 1rem; display: flex; flex-direction: column; gap: 1.5rem; border: none; }
+        @media (min-width: 768px) { .denuncia-fieldset { padding: 2.25rem 2rem 2rem; } }
         .denuncia-label { font-size: 0.875rem; font-weight: 600; color: #564334; display: block; margin-bottom: 0.5rem; }
-        .denuncia-legend { font-size: 1.125rem; font-weight: 700; color: #191c1d; margin-bottom: 1rem; float: unset; width: 100%; }
+        .denuncia-legend { font-size: 1.125rem; font-weight: 700; color: #191c1d; margin: 0 0 1rem 0; padding: 0; float: unset; width: 100%; }
         .denuncia-btn-submit { background: linear-gradient(135deg, #904d00 0%, #ff8c00 100%); color: white; font-weight: 700; font-size: 1.125rem; padding: 1rem 2rem; border-radius: 0.75rem; border: none; cursor: pointer; box-shadow: 0 8px 20px -6px rgba(255,140,0,0.5); display: flex; align-items: center; gap: 0.75rem; transition: all 0.2s; }
         .denuncia-btn-submit:hover { box-shadow: 0 12px 25px -6px rgba(255,140,0,0.6); transform: translateY(-1px); }
         .denuncia-upload-zone { border: 2px dashed rgba(221,193,174,0.4); border-radius: 1rem; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: background-color 0.2s; }

@@ -854,38 +854,6 @@ const OperatorJuridico = () => {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-[260px] hidden md:flex flex-col p-6 space-y-2 bg-[#f8f9fa] border-r border-slate-200">
-          <div className="mb-8">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-              Operações
-            </p>
-            <div className="space-y-1">
-              <div className="flex items-center gap-3 p-3 bg-white text-orange-700 shadow-sm rounded-lg border border-slate-100 font-semibold cursor-default">
-                <TrendingUp className="h-5 w-5" />
-                <span className="text-sm">Dashboard</span>
-              </div>
-              <div className="flex items-center gap-3 p-3 text-slate-500 hover:text-orange-700 hover:translate-x-1 transition-all cursor-default">
-                <Scale className="h-5 w-5" />
-                <span className="text-sm">Casos Ativos</span>
-              </div>
-              <div className="flex items-center gap-3 p-3 text-slate-500 hover:text-orange-700 hover:translate-x-1 transition-all cursor-default">
-                <Archive className="h-5 w-5" />
-                <span className="text-sm">Relatórios</span>
-              </div>
-              <div className="flex items-center gap-3 p-3 text-slate-500 hover:text-orange-700 hover:translate-x-1 transition-all cursor-default">
-                <ClipboardList className="h-5 w-5" />
-                <span className="text-sm">Configurações</span>
-              </div>
-            </div>
-          </div>
-          <div className="mt-auto">
-            <div className="flex items-center gap-3 p-3 text-slate-500 hover:text-orange-700 cursor-default">
-              <AlertCircle className="h-5 w-5" />
-              <span className="text-sm">Suporte</span>
-            </div>
-          </div>
-        </aside>
-
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-8">
           <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <motion.button
