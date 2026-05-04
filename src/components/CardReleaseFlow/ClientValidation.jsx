@@ -57,20 +57,24 @@ const ClientValidation = ({ operatorName, onValidated, onBack, loading, setLoadi
 
       console.log(`Buscando cliente com CPF: ${cpfClean}`);
 
-      const { data, error: queryError } = await supabase
+      const { data: rows, error: queryError } = await supabase
         .from('solicitacoes')
         .select('*')
         .ilike('cpf', pattern)
-        .maybeSingle();
+        .limit(1);
 
       if (queryError) {
         console.error('Erro ao buscar cliente:', {
-          error: queryError,
+          code: queryError.code,
           message: queryError.message,
+          details: queryError.details,
+          hint: queryError.hint,
           cpf: cpfClean,
         });
         throw queryError;
       }
+
+      const data = rows?.[0] ?? null;
 
       if (!data) {
         setError('Cliente não encontrado');
@@ -121,8 +125,10 @@ const ClientValidation = ({ operatorName, onValidated, onBack, loading, setLoadi
       }, 800);
     } catch (err) {
       console.error('Erro ao validar cliente:', {
-        error: err,
+        code: err.code,
         message: err.message,
+        details: err.details,
+        hint: err.hint,
         stack: err.stack,
       });
       setError(err.message || 'Erro ao validar cliente');
@@ -225,7 +231,7 @@ const ClientValidation = ({ operatorName, onValidated, onBack, loading, setLoadi
             </div>
           </div>
           <div className="text-xs text-gray-700 pt-2 border-t border-emerald-200">
-            <p><span className="font-semibold">Limite:</span> {cliente?.limite}</p>
+            <p><span className="font-semibold">Limite:</span> {cliente?.limite || <span className="text-gray-400 italic">Não informado</span>}</p>
             <p><span className="font-semibold">Contrato:</span> {getContratoDisplayLabel(cliente?.contrato)}</p>
           </div>
         </motion.div>

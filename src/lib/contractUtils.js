@@ -3,10 +3,18 @@
  */
 
 export const generateAndOpenContract = async (requestData) => {
+  // Abrir a janela ANTES do await para preservar o contexto de gesto do usuário
+  // (navegadores bloqueiam window.open chamado após uma operação assíncrona)
+  const newWindow = window.open('', '_blank');
+  if (!newWindow) {
+    throw new Error('Popup bloqueado pelo navegador. Permita popups para este site e tente novamente.');
+  }
+
   try {
     // Buscar o template HTML
     const response = await fetch('/contrato.html');
     if (!response.ok) {
+      newWindow.close();
       throw new Error('Não foi possível carregar o template do contrato');
     }
 
@@ -53,23 +61,15 @@ export const generateAndOpenContract = async (requestData) => {
       htmlContent = htmlContent.replace(regex, value);
     });
 
-    // Criar blob do HTML
-    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
+    // Escrever o HTML na janela já aberta
+    newWindow.document.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
 
-    // Abrir em nova aba
-    const window = open(url, '_blank');
-    if (window) {
-      // Aguardar um pouco e disparar impressão automática
-      setTimeout(() => {
-        window.print();
-      }, 500);
-    }
-
-    // Limpar URL temporária após um tempo
+    // Disparar impressão automática após o conteúdo carregar
     setTimeout(() => {
-      URL.revokeObjectURL(url);
-    }, 30000);
+      newWindow.print();
+    }, 500);
 
     return true;
   } catch (error) {

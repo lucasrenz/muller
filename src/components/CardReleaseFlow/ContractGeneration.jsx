@@ -126,7 +126,7 @@ const ContractGeneration = ({ client, onGenerated, onBack, loading, setLoading }
         </div>
         <div className="pt-3 border-t border-gray-200">
           <p className="text-xs text-gray-600 mb-1">Limite aprovado</p>
-          <p className="text-sm font-semibold text-gray-900">{client.limite}</p>
+          <p className="text-sm font-semibold text-gray-900">{client.limite || <span className="text-gray-400 italic">Não informado</span>}</p>
         </div>
       </div>
 
