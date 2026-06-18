@@ -10,7 +10,7 @@ import {
   Loader2, FileText, MessageSquare, Paperclip, ClipboardList,
   Eye, EyeOff, ChevronDown, CheckCircle2, ExternalLink, ShieldAlert,
   MessageCircle, AlertCircle, TrendingUp, Clock, Archive, Sparkles,
-  ArrowUpRight, MoreVertical,
+  ArrowUpRight,
 } from 'lucide-react';
 
 // ─── constantes ────────────────────────────────────────────────────────────────
@@ -215,8 +215,6 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
   const [editStatus,   setEditStatus]   = useState(denuncia.status);
   const [editPriority, setEditPriority] = useState(denuncia.prioridade);
   const [savingFields, setSavingFields] = useState(false);
-  const [actionsOpen,  setActionsOpen]  = useState(false);
-  const actionsRef = useRef(null);
 
   const hasChanges = editStatus !== denuncia.status || editPriority !== denuncia.prioridade;
   const operadorNome = perfil?.nome || 'Operador';
@@ -241,26 +239,7 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
   useEffect(() => {
     setEditStatus(denuncia.status);
     setEditPriority(denuncia.prioridade);
-    setActionsOpen(false);
   }, [denuncia.id, denuncia.status, denuncia.prioridade]);
-
-  useEffect(() => {
-    if (!actionsOpen) return undefined;
-
-    const handleOutsideClick = (event) => {
-      if (!actionsRef.current?.contains(event.target)) {
-        setActionsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
-  }, [actionsOpen]);
-
-  const handleQuickStatus = (status) => {
-    setEditStatus(status);
-    setActionsOpen(false);
-  };
 
   function getRpcErrorMessage(error, fallback) {
     if (!error) return fallback;
@@ -379,35 +358,6 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
 
           {/* Ações */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className="relative" ref={actionsRef}>
-              <button
-                onClick={() => setActionsOpen(o => !o)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors"
-                title="Alterar status"
-              >
-                <MoreVertical className="h-5 w-5" />
-              </button>
-              {actionsOpen && (
-                <div className="absolute right-0 top-full z-20 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-                  <div className="flex flex-col p-1">
-                    <p className="px-3 py-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">Alterar status</p>
-                    {STATUS_ORDER.map(s => {
-                      const cfg  = STATUS_CONFIG[s];
-                      const Icon = cfg.icon;
-                      return (
-                        <button key={s} onClick={() => handleQuickStatus(s)}
-                          className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-colors ${editStatus === s ? `${cfg.bg} ${cfg.text} font-semibold` : 'text-slate-700 hover:bg-slate-50'}`}
-                        >
-                          <Icon className={`h-4 w-4 ${editStatus === s ? cfg.text : 'text-slate-400'}`} />
-                          {cfg.label}
-                          {editStatus === s && <CheckCircle2 className={`h-3.5 w-3.5 ml-auto ${cfg.text}`} />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
             <button onClick={onClose}
               className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors"
               title="Fechar"
@@ -417,20 +367,35 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
           </div>
         </div>
 
-        {/* Prioridade + salvar */}
-        <div className="flex items-center justify-between gap-4 px-6 pb-4">
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Prioridade</span>
-            <div className="relative">
-              <select
-                value={editPriority}
-                onChange={e => setEditPriority(e.target.value)}
-                className="appearance-none rounded-xl border border-slate-200 bg-white pl-3 pr-7 py-1.5 text-sm font-medium text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 focus:outline-none"
-              >
-                {PRIORITY_ORDER.map(p => <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>)}
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
-            </div>
+        {/* Status, prioridade + salvar */}
+        <div className="flex items-end justify-between gap-4 px-6 pb-4">
+          <div className="grid grid-cols-1 gap-3 min-w-0 sm:grid-cols-2">
+            <label className="space-y-1.5">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Prioridade</span>
+              <div className="relative">
+                <select
+                  value={editPriority}
+                  onChange={e => setEditPriority(e.target.value)}
+                  className="min-w-[12rem] appearance-none rounded-xl border border-slate-200 bg-white pl-3 pr-8 py-2 text-sm font-medium text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 focus:outline-none"
+                >
+                  {PRIORITY_ORDER.map(p => <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>)}
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+              </div>
+            </label>
+            <label className="space-y-1.5">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
+              <div className="relative">
+                <select
+                  value={editStatus}
+                  onChange={e => setEditStatus(e.target.value)}
+                  className="min-w-[12rem] appearance-none rounded-xl border border-slate-200 bg-white pl-3 pr-8 py-2 text-sm font-medium text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 focus:outline-none"
+                >
+                  {STATUS_ORDER.map(s => <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>)}
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+              </div>
+            </label>
             <span className="text-xs text-slate-400">Recebida {formatDate(denuncia.created_at)}</span>
           </div>
           {hasChanges && (
@@ -1061,10 +1026,10 @@ const OperatorJuridico = () => {
                               <td className="px-6 py-4 text-right">
                                 <button
                                   onClick={e => { e.stopPropagation(); setSelected(d); setDrawerOpen(true); }}
-                                  className="text-slate-400 hover:text-orange-600"
-                                  title="Abrir detalhes"
+                                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-orange-600 hover:border-orange-200 hover:bg-orange-50 transition-colors"
+                                  title="Abrir denúncia"
                                 >
-                                  <MoreVertical className="h-5 w-5" />
+                                  <ArrowUpRight className="h-4 w-4" />
                                 </button>
                               </td>
                             </tr>
@@ -1102,7 +1067,7 @@ const OperatorJuridico = () => {
                   </div>
                   {activeCase && (
                     <button
-                      onClick={() => setDrawerOpen(true)}
+                      onClick={() => { setSelected(activeCase); setDrawerOpen(true); }}
                       className="p-2 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-orange-600"
                       title="Abrir painel completo"
                     >
@@ -1155,7 +1120,7 @@ const OperatorJuridico = () => {
                       <div className="space-y-4">
                         <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Ações</label>
                         <button
-                          onClick={() => setDrawerOpen(true)}
+                          onClick={() => { setSelected(activeCase); setDrawerOpen(true); }}
                           className="w-full px-4 py-2.5 bg-orange-600 text-white font-semibold text-sm rounded-lg hover:bg-orange-700 transition-all active:scale-95 shadow-lg shadow-orange-600/20"
                         >
                           Abrir Fluxo Completo

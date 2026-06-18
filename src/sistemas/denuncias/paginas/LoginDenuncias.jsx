@@ -18,6 +18,20 @@ import { temAcessoAoModulo } from '@/compartilhado/servicos/verificarPermissao';
 
 const LOGO_URL = 'https://i.ibb.co/cXwpq4sq/Logo-Grupo-Muller.png';
 
+const maskEmail = (email = '') => {
+  const [name, domain] = String(email).split('@');
+  if (!domain) return email ? '***' : '';
+  return `${name.slice(0, 2)}***@${domain}`;
+};
+
+const loginLog = (event, payload = {}) => {
+  console.log(`[LOGIN_DENUNCIAS] ${event}`, {
+    path: window.location.pathname,
+    at: new Date().toISOString(),
+    ...payload,
+  });
+};
+
 const LoginDenuncias = () => {
   const navigate = useNavigate();
   const { login, logout, currentUser, perfil, loading: authLoading } = useAuth();
@@ -27,13 +41,26 @@ const LoginDenuncias = () => {
   const [form, setForm] = useState({ email: '', password: '' });
 
   useEffect(() => {
+    loginLog('auth-state-effect', {
+      authLoading,
+      hasCurrentUser: Boolean(currentUser),
+      perfilTipo: perfil?.tipo || null,
+      perfilAtivo: perfil?.ativo ?? null,
+    });
+
     if (authLoading || !currentUser || !perfil) return;
 
     if (temAcessoAoModulo(perfil.tipo, 'denuncias')) {
+      loginLog('redirect-to-panel', {
+        perfilTipo: perfil.tipo,
+      });
       navigate('/denuncias/painel', { replace: true });
       return;
     }
 
+    loginLog('blocked-wrong-module-logout', {
+      perfilTipo: perfil.tipo,
+    });
     logout();
     setErro('Este acesso e exclusivo para operadores do canal de denuncias.');
   }, [authLoading, currentUser, perfil, navigate, logout]);
@@ -42,24 +69,42 @@ const LoginDenuncias = () => {
     e.preventDefault();
     setErro('');
 
+    loginLog('submit', {
+      email: maskEmail(form.email),
+      hasPassword: Boolean(form.password),
+    });
+
     if (!form.email.trim() || !form.password) {
+      loginLog('submit-validation-error');
       setErro('Informe e-mail e senha para acessar o painel.');
       return;
     }
 
     try {
       setLoading(true);
+      loginLog('login-call:start');
       const { error } = await login(form.email, form.password, 'denuncias');
 
       if (error) {
+        loginLog('login-call:error', {
+          message: error.message,
+        });
         setErro(error.message || 'Nao foi possivel entrar. Verifique seus dados.');
         return;
       }
 
+      loginLog('login-call:success-navigate');
       navigate('/denuncias/painel', { replace: true });
     } catch (error) {
+      console.error('[LOGIN_DENUNCIAS] login-call:exception', {
+        path: window.location.pathname,
+        at: new Date().toISOString(),
+        message: error?.message || String(error),
+        error,
+      });
       setErro(error.message || 'Nao foi possivel entrar. Verifique seus dados.');
     } finally {
+      loginLog('login-call:finish');
       setLoading(false);
     }
   };

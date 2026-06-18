@@ -8,12 +8,30 @@ const getEnv = (key, fallback = '') => viteEnv[key] || fallback;
 
 const clientCache = globalThis.__GRUPO_MULLER_SUPABASE_CLIENTS__ ||= {};
 
+const logSupabase = (event, payload = {}) => {
+  console.log(`[SUPABASE_CLIENT] ${event}`, {
+    path: typeof window !== 'undefined' ? window.location.pathname : '',
+    at: new Date().toISOString(),
+    ...payload,
+  });
+};
+
+const getSafeConfig = (moduleKey, url, anonKey) => ({
+  moduleKey,
+  url,
+  hasAnonKey: Boolean(anonKey),
+  anonKeyLength: anonKey?.length || 0,
+});
+
 const createNamedClient = (moduleKey, url, anonKey) => {
   const cacheKey = `${moduleKey}:${url}:${anonKey}`;
 
   if (clientCache[cacheKey]) {
+    logSupabase('cache-hit', getSafeConfig(moduleKey, url, anonKey));
     return clientCache[cacheKey];
   }
+
+  logSupabase('create-client', getSafeConfig(moduleKey, url, anonKey));
 
   clientCache[cacheKey] = createClient(url, anonKey, {
     auth: {
@@ -69,7 +87,10 @@ export const supabaseVagas = createLazyNamedClient('vagas', vagasUrl, vagasAnonK
 export const supabaseDenuncias = createLazyNamedClient('denuncias', denunciasUrl, denunciasAnonKey);
 
 export const getSupabaseClientByModule = (moduleName = 'financeiro') => {
-  switch ((moduleName || '').toLowerCase().trim()) {
+  const normalizedModule = (moduleName || '').toLowerCase().trim();
+  logSupabase('select-by-module', { moduleName, normalizedModule });
+
+  switch (normalizedModule) {
     case 'denuncias':
     case 'juridico':
       return supabaseDenuncias;
@@ -84,14 +105,21 @@ export const getSupabaseClientByModule = (moduleName = 'financeiro') => {
 };
 
 export const getSupabaseClientByPath = (path = window.location.pathname) => {
+  let selectedModule = 'financeiro';
+
   if (path.startsWith('/denuncias') || path.startsWith('/denuncia') || path.startsWith('/consultar-denuncia') || path.startsWith('/operator-juridico')) {
+    selectedModule = 'denuncias';
+    logSupabase('select-by-path', { path, selectedModule });
     return supabaseDenuncias;
   }
 
   if (path.startsWith('/vagas') || path.startsWith('/operator-rh')) {
+    selectedModule = 'vagas';
+    logSupabase('select-by-path', { path, selectedModule });
     return supabaseVagas;
   }
 
+  logSupabase('select-by-path', { path, selectedModule });
   return supabaseFinanceiro;
 };
 
