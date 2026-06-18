@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato de Concessão de Crédito</title>
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        /* Container do Documento (Efeito de Folha A4) */
+        .document-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 60px 80px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #2c3e50; /* Detalhe elegante no topo */
+        }
+
+        /* Cabeçalho */
+        h1 {
+            text-align: center;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #1a252f;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+
+        /* Preâmbulo e Parágrafos */
+        .preamble {
+            text-align: justify;
+            margin-bottom: 40px;
+        }
+
+        p {
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+
+        /* Linhas preenchíveis */
+        .blank {
+            display: inline-block;
+            border-bottom: 1px solid #333;
+            min-height: 20px;
+        }
+        .blank-large { width: 300px; }
+        .blank-medium { width: 150px; }
+        .blank-small { width: 80px; }
+
+        /* Cláusulas */
+        .clause {
+            margin-bottom: 25px;
+        }
+        .clause-title {
+            font-weight: bold;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        /* Seção de Assinaturas */
+        .signatures {
+            margin-top: 60px;
+        }
+        .date-location {
+            margin-bottom: 40px;
+        }
+        .signature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .signature-box {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .signature-line {
+            border-top: 1px solid #333;
+            width: 100%;
+            margin: 0 auto 10px auto;
+        }
+        .signature-details {
+            text-align: left;
+            font-size: 14px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        /* Destaques de texto */
+        .highlight {
+            font-weight: bold;
+        }
+
+        /* Otimização para Impressão */
+        @media print {
+            body {
+                background-color: transparent;
+                padding: 0;
+            }
+            .document-container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                max-width: 100%;
+            }
+            .signature-grid {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        
+        <h1>Contrato de Concessão de Crédito</h1>
+
+        <div class="preamble">
+            Entre as partes, de um lado {{nome_completo}}, residente na cidade de {{cidade}}, na Rua {{rua}}, n° {{numero}}, no Bairro {{bairro}}, Pessoa Natural inscrito CPF {{cpf}}, doravante denominada apenas TITULAR, <strong>FRANCK F MÜLLER SUPERMERCADO EIRELI - EPP</strong>, Picada Gravatá, 1350, Taquara - RS, CNPJ: 19.447.129/0001-70 aqui denomina somente <strong>CONCEDENTE</strong>, firmam a presente Concessão e Abertura de Crédito, regida pelas condições abaixo:
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA PRIMEIRA – DA PREVALÊNCIA DAS CONDIÇÕES ESPECÍFICAS</span>
+            <p>As partes ajustam, de comum acordo, que as disposições específicas relativas à concessão de crédito, definição e gestão de limites, critérios de renda, política de reajuste e reavaliação, inadimplência, procedimentos de cobrança, garantias, avalista e emissão de cartões adicionais, constantes deste instrumento, prevalecerão integralmente sobre quaisquer disposições gerais, formulários de adesão, propostas comerciais e regulamentos internos, afastando-se, desde já, qualquer interpretação conflitante.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA SEGUNDA – DA NATUREZA DO CARTÃO</span>
+            <p>O cartão objeto do presente contrato constitui instrumento de crédito interno, de uso restrito aos estabelecimentos integrantes da rede <strong>GRUPO MÜLLER</strong>, não se caracterizando, em nenhuma hipótese, como cartão bancário, financeiro ou administrado por instituição integrante do Sistema Financeiro Nacional, tampouco sujeito à regulamentação do Banco Central do Brasil, tratando-se de modalidade própria de fomento e facilitação comercial.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA TERCEIRA – DO OBJETO DO CONTRATO</span>
+            <p>O presente contrato tem por objeto a concessão de crédito ao CLIENTE, por meio de cartão próprio da empresa, destinado exclusivamente à aquisição de produtos e serviços ofertados nos estabelecimentos da rede <strong>GRUPO MÜLLER</strong>, observados os limites aprovados, as condições comerciais vigentes, os critérios internos de concessão e as regras aqui pactuadas.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA QUARTA – DA TITULARIDADE, PESSOALIDADE E USO DO CARTÃO</span>
+            <p>O cartão é emitido em caráter pessoal e intransferível, sendo vedado ao titular emprestá-lo, cedê-lo, aliená-lo ou permitir sua utilização por terceiros, sob qualquer forma ou pretexto, salvo na hipótese de emissão de cartões adicionais para dependentes expressamente autorizados pela CONCEDENTE, permanecendo o titular integralmente responsável por todas as obrigações financeiras decorrentes de sua utilização.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA QUINTA – DA LIBERAÇÃO INICIAL DO LIMITE DE CRÉDITO</span>
+            <p>A liberação de limite de crédito não é automática, estando sempre condicionada à prévia análise cadastral, financeira e de risco, bem como à aprovação interna da CONCEDENTE.</p>
+            <ul>
+                <li>Na inexistência de avalista, o limite inicial padrão será fixado no valor de <strong>R$ 250,00</strong> (duzentos e cinquenta reais).</li>
+                <li>Havendo avalista devidamente aprovado e formalmente anuente, o limite inicial poderá, a exclusivo critério da CONCEDENTE, ser ampliado para até <strong>R$ 500,00</strong> (quinhentos reais).</li>
+            </ul>
+            <p><em>Parágrafo único.</em> A concessão de limite superior constitui mera liberalidade da CONCEDENTE, não gerando direito adquirido ao CLIENTE.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA SEXTA – DO AVALISTA E DA RESPONSABILIDADE SOLIDÁRIA</span>
+            <p>Na hipótese de concessão de crédito mediante avalista, este assume, de forma expressa, responsabilidade solidária e ilimitada por todas as obrigações financeiras assumidas pelo titular, abrangendo valores principais, encargos contratuais, juros, multas, correção monetária e despesas decorrentes de cobrança administrativa ou judicial, declarando plena ciência de que poderá ser cobrado em caso de inadimplência do CLIENTE.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA SÉTIMA – DO CRITÉRIO DE RENDA E LIMITE MÁXIMO</span>
+            <p>O limite de crédito concedido ao CLIENTE não poderá, em qualquer hipótese, ultrapassar <strong>30% (trinta por cento)</strong> da renda mensal comprovada, considerada individualmente ou de forma conjunta com o avalista, quando houver, observados os critérios internos de análise da CONCEDENTE.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA OITAVA – DA REAVALIAÇÃO E REAJUSTE DO LIMITE</span>
+            <p>O limite de crédito poderá ser reavaliado periodicamente, preferencialmente a cada <strong>06 (seis) meses</strong>, podendo ser majorado em até <strong>50% (cinquenta por cento)</strong> do limite vigente, desde que atendidos os critérios internos de adimplência, histórico de pagamento e compatibilidade de renda, sempre a exclusivo critério da CONCEDENTE, que poderá indeferir o reajuste mesmo quando atendidos tais critérios.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA NONA – DA INADIMPLÊNCIA</span>
+            <p>Considerar-se-á inadimplente o CLIENTE que deixar de efetuar o pagamento de qualquer obrigação assumida no prazo superior a <strong>15 (quinze) dias</strong>, contados da data de vencimento, independentemente de aviso ou notificação prévia.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA – DO CONTROLE INTERNO E REGISTRO SISTÊMICO</span>
+            <p>A CONCEDENTE utilizará o sistema <strong>Sysmo</strong>, ou outro sistema equivalente que venha a substituí-lo, como ferramenta oficial para controle de faturamento, monitoramento da inadimplência e registro do histórico de pagamentos do CLIENTE, cujos registros servirão como base para análise de crédito, reavaliação de limite e adoção de medidas de cobrança.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA PRIMEIRA – DO PROTESTO E DAS MEDIDAS DE COBRANÇA</span>
+            <p>Caracterizada a inadimplência, o CLIENTE e o AVALISTA autorizam expressamente a CONCEDENTE a adotar todas as medidas legais cabíveis para a recuperação do crédito, inclusive protesto de títulos em cartório, cobrança administrativa e ajuizamento de medidas judiciais, respondendo solidariamente pelos encargos daí decorrentes.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA SEGUNDA – DO EXTRAVIO, PERDA OU ROUBO DO CARTÃO</span>
+            <p>O titular obriga-se a comunicar imediatamente à CONCEDENTE qualquer evento de perda, roubo, furto ou extravio do cartão, permanecendo integralmente responsável por todas as transações realizadas até a efetiva comunicação formal.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA TERCEIRA – DA ATUALIZAÇÃO CADASTRAL</span>
+            <p>O CLIENTE compromete-se a manter seus dados cadastrais sempre atualizados, comunicando prontamente qualquer alteração relevante, reputando-se válidas todas as comunicações encaminhadas aos dados constantes do cadastro.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA QUARTA – DO CANCELAMENTO OU REDUÇÃO DO LIMITE</span>
+            <p>A CONCEDENTE poderá, a qualquer tempo, por critérios internos, política de risco ou inadimplência, reduzir, suspender ou cancelar o limite de crédito concedido, bem como cartões adicionais, sem que tal ato gere direito à indenização ou obrigação de aviso prévio.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA QUINTA – DOS ENCARGOS MORATÓRIOS</span>
+            <p>Sobre os valores pagos em atraso incidirão multa moratória de <strong>2% (dois por cento)</strong>, juros de mora de <strong>1% (um por cento)</strong> ao mês, além de correção monetária pelo <strong>IPCA</strong>, ou outro índice que venha a substituí-lo.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA SEXTA – DA CONFISSÃO DE DÍVIDA</span>
+            <p>O atraso no pagamento de qualquer obrigação assumida neste contrato importa em reconhecimento e confissão irrevogável e irretratável do débito, para todos os fins de direito.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA SÉTIMA – DA FLEXIBILIZAÇÃO DA COMPROVAÇÃO DE RENDA</span>
+            <p>A CONCEDENTE poderá, a seu exclusivo critério, aceitar formas alternativas de comprovação de renda, tais como extratos bancários, declarações informais ou outros elementos que demonstrem capacidade de pagamento, sem que tal aceitação gere direito adquirido, obrigação de concessão de crédito ou vinculação a futuras análises.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA OITAVA – DOS CARTÕES ADICIONAIS</span>
+            <p>A emissão de cartões adicionais para dependentes ficará condicionada à autorização da CONCEDENTE, respondendo o titular de forma integral e exclusiva por todas as compras e obrigações deles decorrentes.</p>
+        </div>
+
+        <div class="clause">
+            <span class="clause-title">CLÁUSULA DÉCIMA NONA – DO FORO</span>
+            <p>Para dirimir quaisquer controvérsias oriundas deste contrato, as partes elegem o foro da <strong>Comarca de Taquara/RS</strong>, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
+        </div>
+
+        <div class="signatures">
+            <div class="date-location">
+                Taquara - RS, {{dia}} de {{mes}} de {{ano}}.
+            </div>
+
+            <div class="signature-grid">
+                
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <strong>CLIENTE (Titular)</strong>
+                    <div class="signature-details">
+                        <span>Nome: {{nome_completo}}</span>
+                        <span>CPF: {{cpf}}</span>
+                    </div>
+                </div>
+
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <strong>CONCEDENTE – GRUPO MÜLLER</strong>
+                    <div class="signature-details">
+                        <span>Representante legal: <span class="blank" style="width: 53%;"></span></span>
+                    </div>
+                </div>
+
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <strong>AVALISTA (se houver)</strong>
+                    <div class="signature-details">
+                        <span>Nome: <span class="blank" style="width: 80%;"></span></span>
+                        <span>CPF: <span class="blank" style="width: 83%;"></span></span>
+                    </div>
+                </div>
+
+                <div class="signature-box">
+                    </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

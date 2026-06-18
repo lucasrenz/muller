@@ -1,0 +1,16 @@
+[build]
+# Comando para construir a aplicação
+cmd = "npm install && npm run build"
+
+[start]
+# Comando para iniciar a aplicação
+cmd = "npm run start"
+
+[environment]
+# Variáveis de ambiente necessárias (adicione conforme necessário)
+# NODE_ENV = "production"
+PORT = "3000"
+
+[web]
+  engine = "nginx"
+  root = "dist"
