@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, ChevronDown, ArrowUp, ArrowDown, Edit, ToggleLeft, ToggleRight, Loader2, FileText } from 'lucide-react';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { createQuestionario, fetchQuestionariosAdmin, updateQuestionario, toggleQuestionarioAtivo } from '../lib/rhService';
 
 const DEFAULT_QUESTION = {

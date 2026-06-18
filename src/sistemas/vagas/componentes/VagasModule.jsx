@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, Edit, ToggleLeft, ToggleRight, Plus, Building2, Users, FileText, Loader2, Calendar, ArrowLeft } from 'lucide-react';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import {
   fetchVagas,
   createVaga,

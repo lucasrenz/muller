@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Building2, Edit, ToggleLeft, ToggleRight, Plus, MapPin, Loader2, ArrowLeft } from 'lucide-react';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { fetchLojas, createLoja, updateLoja, toggleLojaAtivo } from '../lib/rhService';
 
 const LojasModule = ({ isOpen, onClose }) => {

@@ -10,7 +10,7 @@ import {
   Loader2, FileText, MessageSquare, Paperclip, ClipboardList,
   Eye, EyeOff, ChevronDown, CheckCircle2, ExternalLink, ShieldAlert,
   MessageCircle, AlertCircle, TrendingUp, Clock, Archive, Sparkles,
-  ArrowUpRight,
+  ArrowUpRight, MoreVertical,
 } from 'lucide-react';
 
 // ─── constantes ────────────────────────────────────────────────────────────────
@@ -215,6 +215,8 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
   const [editStatus,   setEditStatus]   = useState(denuncia.status);
   const [editPriority, setEditPriority] = useState(denuncia.prioridade);
   const [savingFields, setSavingFields] = useState(false);
+  const [actionsOpen,  setActionsOpen]  = useState(false);
+  const actionsRef = useRef(null);
 
   const hasChanges = editStatus !== denuncia.status || editPriority !== denuncia.prioridade;
   const operadorNome = perfil?.nome || 'Operador';
@@ -235,6 +237,30 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
   }, [denuncia.id]);
 
   useEffect(() => { loadDetail(); }, [loadDetail]);
+
+  useEffect(() => {
+    setEditStatus(denuncia.status);
+    setEditPriority(denuncia.prioridade);
+    setActionsOpen(false);
+  }, [denuncia.id, denuncia.status, denuncia.prioridade]);
+
+  useEffect(() => {
+    if (!actionsOpen) return undefined;
+
+    const handleOutsideClick = (event) => {
+      if (!actionsRef.current?.contains(event.target)) {
+        setActionsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [actionsOpen]);
+
+  const handleQuickStatus = (status) => {
+    setEditStatus(status);
+    setActionsOpen(false);
+  };
 
   function getRpcErrorMessage(error, fallback) {
     if (!error) return fallback;

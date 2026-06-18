@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Edit, ToggleLeft, ToggleRight, Plus, Briefcase, Loader2, ArrowLeft } from 'lucide-react';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { fetchCargos, createCargo, updateCargo, toggleCargoAtivo } from '../lib/rhService';
 
 const CargosModule = ({ isOpen, onClose }) => {

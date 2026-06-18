@@ -6,12 +6,54 @@ const legacySupabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJz
 const viteEnv = import.meta.env;
 const getEnv = (key, fallback = '') => viteEnv[key] || fallback;
 
-const createNamedClient = (moduleKey, url, anonKey) =>
-  createClient(url, anonKey, {
+const clientCache = globalThis.__GRUPO_MULLER_SUPABASE_CLIENTS__ ||= {};
+
+const createNamedClient = (moduleKey, url, anonKey) => {
+  const cacheKey = `${moduleKey}:${url}:${anonKey}`;
+
+  if (clientCache[cacheKey]) {
+    return clientCache[cacheKey];
+  }
+
+  clientCache[cacheKey] = createClient(url, anonKey, {
     auth: {
       storageKey: `grupo-muller-${moduleKey}-auth`,
     },
   });
+
+  return clientCache[cacheKey];
+};
+
+const createLazyNamedClient = (moduleKey, url, anonKey) => {
+  let client = null;
+
+  const getClient = () => {
+    client ||= createNamedClient(moduleKey, url, anonKey);
+    return client;
+  };
+
+  return new Proxy({}, {
+    get(_target, property) {
+      if (property === 'then') return undefined;
+
+      const value = getClient()[property];
+      return typeof value === 'function' ? value.bind(getClient()) : value;
+    },
+    set(_target, property, value) {
+      getClient()[property] = value;
+      return true;
+    },
+    has(_target, property) {
+      return property in getClient();
+    },
+    ownKeys() {
+      return Reflect.ownKeys(getClient());
+    },
+    getOwnPropertyDescriptor(_target, property) {
+      return Object.getOwnPropertyDescriptor(getClient(), property);
+    },
+  });
+};
 
 const financeiroUrl = getEnv('VITE_SUPABASE_FINANCEIRO_URL', getEnv('VITE_SUPABASE_URL', legacySupabaseUrl));
 const financeiroAnonKey = getEnv('VITE_SUPABASE_FINANCEIRO_ANON_KEY', getEnv('VITE_SUPABASE_ANON_KEY', legacySupabaseAnonKey));
@@ -22,9 +64,9 @@ const vagasAnonKey = getEnv('VITE_SUPABASE_VAGAS_ANON_KEY', financeiroAnonKey);
 const denunciasUrl = getEnv('VITE_SUPABASE_DENUNCIAS_URL', financeiroUrl);
 const denunciasAnonKey = getEnv('VITE_SUPABASE_DENUNCIAS_ANON_KEY', financeiroAnonKey);
 
-export const supabaseFinanceiro = createNamedClient('financeiro', financeiroUrl, financeiroAnonKey);
-export const supabaseVagas = createNamedClient('vagas', vagasUrl, vagasAnonKey);
-export const supabaseDenuncias = createNamedClient('denuncias', denunciasUrl, denunciasAnonKey);
+export const supabaseFinanceiro = createLazyNamedClient('financeiro', financeiroUrl, financeiroAnonKey);
+export const supabaseVagas = createLazyNamedClient('vagas', vagasUrl, vagasAnonKey);
+export const supabaseDenuncias = createLazyNamedClient('denuncias', denunciasUrl, denunciasAnonKey);
 
 export const getSupabaseClientByModule = (moduleName = 'financeiro') => {
   switch ((moduleName || '').toLowerCase().trim()) {

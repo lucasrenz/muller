@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Loader2, CheckCircle, User, FileText, Send } from 'lucide-react';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import QuestionarioRenderer from './QuestionarioRenderer';
 import { fetchQuestionarioByVagaId, createInscricao } from '../lib/rhService';
 import { montarRespostasJsonEstruturado } from '../lib/respostasUtils';
