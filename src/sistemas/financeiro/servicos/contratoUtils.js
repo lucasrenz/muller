@@ -2,6 +2,9 @@
  * Utilidade para gerar e exibir contrato em uma nova aba.
  */
 
+// eslint-disable-next-line import/no-unresolved
+import fallbackContractTemplate from '../../../../public/contrato.html?raw';
+
 const escapeHtml = (value) =>
   String(value ?? '').replace(/[&<>"']/g, (char) => ({
     '&': '&amp;',
@@ -62,6 +65,31 @@ const writeErrorState = (targetWindow, message) => {
 const getContractTemplateUrl = () => {
   const baseUrl = import.meta.env.BASE_URL || '/';
   return `${baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`}contrato.html`;
+};
+
+const isValidContractTemplate = (htmlContent) =>
+  typeof htmlContent === 'string'
+  && htmlContent.includes('{{nome_completo}}')
+  && htmlContent.includes('{{cpf}}');
+
+const loadContractTemplate = async () => {
+  try {
+    const response = await fetch(getContractTemplateUrl(), { cache: 'no-store' });
+    if (response.ok) {
+      const htmlContent = await response.text();
+      if (isValidContractTemplate(htmlContent)) {
+        return htmlContent;
+      }
+    }
+  } catch (error) {
+    console.warn('Falha ao buscar contrato.html; usando template embutido.', error);
+  }
+
+  if (isValidContractTemplate(fallbackContractTemplate)) {
+    return fallbackContractTemplate;
+  }
+
+  throw new Error('Template do contrato invalido ou nao encontrado. Verifique se o arquivo contrato.html esta disponivel na pasta public.');
 };
 
 const openHtmlAsIsolatedDocument = (targetWindow, htmlContent) => {
@@ -130,15 +158,7 @@ export const generateAndOpenContract = async (requestData) => {
   writeLoadingState(newWindow);
 
   try {
-    const response = await fetch(getContractTemplateUrl(), { cache: 'no-store' });
-    if (!response.ok) {
-      throw new Error('Nao foi possivel carregar o template do contrato.');
-    }
-
-    let htmlContent = await response.text();
-    if (!htmlContent.includes('{{nome_completo}}')) {
-      throw new Error('Template do contrato invalido ou nao encontrado. Verifique se o arquivo contrato.html esta disponivel na pasta public.');
-    }
+    let htmlContent = await loadContractTemplate();
 
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
