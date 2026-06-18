@@ -1040,7 +1040,6 @@ const OperatorJuridico = () => {
                         <th className="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-[0.05em]">Relator</th>
                         <th className="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-[0.05em]">Data</th>
                         <th className="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-[0.05em]">Status</th>
-                        <th className="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-[0.05em]">Operador</th>
                         <th className="px-6 py-4 text-[11px] font-semibold text-slate-500 uppercase tracking-[0.05em] text-right">Ações</th>
                       </tr>
                     </thead>
@@ -1049,7 +1048,7 @@ const OperatorJuridico = () => {
                         Array.from({ length: 8 }).map((_, i) => <SkeletonRow key={i} />)
                       ) : denuncias.length === 0 ? (
                         <tr>
-                          <td colSpan={8}>
+                          <td colSpan={7}>
                             <div className="flex flex-col items-center justify-center gap-3 py-16">
                               <AlertCircle className="h-12 w-12 text-slate-300" />
                               <p className="text-sm font-medium text-slate-700">Nenhuma denúncia encontrada</p>
@@ -1079,7 +1078,6 @@ const OperatorJuridico = () => {
                                   {sCfg.label || d.status}
                                 </span>
                               </td>
-                              <td className="px-6 py-4 text-sm text-slate-600">{perfil?.nome || 'Jurídico'}</td>
                               <td className="px-6 py-4 text-right">
                                 <button
                                   onClick={e => { e.stopPropagation(); setSelected(d); setDrawerOpen(true); }}

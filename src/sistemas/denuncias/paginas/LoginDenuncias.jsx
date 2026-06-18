@@ -193,7 +193,7 @@ const LoginDenuncias = () => {
 
                   <button
                     type="submit"
-                    disabled={loading || authLoading}
+                    disabled={loading}
                     className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-orange-600 px-4 text-sm font-bold text-white shadow-sm transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
