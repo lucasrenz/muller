@@ -362,7 +362,7 @@ export default function DenunciaPage() {
                       </div>
                       <div>
                         <label className="denuncia-label" htmlFor="local_ocorrido">Local onde ocorreu</label>
-                        <input className="denuncia-input" id="local_ocorrido" placeholder="Ex: Filial São Paulo, Setor Financeiro..." type="text" value={form.local_ocorrencia} onChange={set('local_ocorrencia')} />
+                        <input className="denuncia-input" id="local_ocorrido" placeholder="Ex: Loja Certo 115 ou Loja Certo da 020..." type="text" value={form.local_ocorrencia} onChange={set('local_ocorrencia')} />
                       </div>
                     </div>
                     <div>

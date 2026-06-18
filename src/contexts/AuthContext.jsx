@@ -3,28 +3,45 @@ import { getSupabaseClientByModule, getSupabaseClientByPath } from '@/lib/custom
 import { useToast } from '@/components/ui/use-toast';
 
 const AuthContext = createContext(undefined);
+const AUTH_TIMEOUT_MS = 20000;
 
 const getAuthSupabase = (moduleName) => (
   moduleName ? getSupabaseClientByModule(moduleName) : getSupabaseClientByPath()
 );
 
+const withTimeout = (promise, message) => {
+  let timeoutId;
+
+  const timeout = new Promise((_, reject) => {
+    timeoutId = window.setTimeout(() => reject(new Error(message)), AUTH_TIMEOUT_MS);
+  });
+
+  return Promise.race([promise, timeout]).finally(() => window.clearTimeout(timeoutId));
+};
+
 const fetchUserProfile = async (userId, supabaseClient) => {
   try {
     try {
-      const { data, error } = await supabaseClient.rpc('get_meu_perfil', {
-        p_auth_user_id: userId,
-      });
+      const { data, error } = await withTimeout(
+        supabaseClient.rpc('get_meu_perfil', {
+          p_auth_user_id: userId,
+        }),
+        'Tempo esgotado ao buscar o perfil do usuario. Verifique a conexao com o Supabase no deploy.'
+      );
 
       if (!error && data) return data;
     } catch (rpcError) {
       // Fallback abaixo quando a RPC nao existir no banco.
     }
 
-    const { data: profileData, error: profileError } = await supabaseClient
-      .from('usuarios_sistema')
-      .select('*')
-      .eq('auth_user_id', userId)
-      .single();
+    const { data: profileData, error: profileError } = await withTimeout(
+      supabaseClient
+        .from('usuarios_sistema')
+        .select('*')
+        .eq('auth_user_id', userId)
+        .single(),
+      'Tempo esgotado ao buscar o perfil do usuario. Verifique a conexao com o Supabase no deploy.'
+    );
 
     if (profileError) {
       console.warn('Perfil nao encontrado:', profileError.message);
@@ -77,7 +94,10 @@ export const AuthProvider = ({ children }) => {
 
     const getSession = async () => {
       try {
-        const { data, error } = await supabaseClient.auth.getSession();
+        const { data, error } = await withTimeout(
+          supabaseClient.auth.getSession(),
+          'Tempo esgotado ao verificar a sessao atual. Verifique a conexao com o Supabase no deploy.'
+        );
         if (error) throw error;
 
         const session = data?.session;
@@ -137,10 +157,13 @@ export const AuthProvider = ({ children }) => {
     const supabaseClient = getAuthSupabase(loginModule);
 
     try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
+      const { data, error } = await withTimeout(
+        supabaseClient.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        }),
+        'Tempo esgotado ao autenticar. Verifique se as variaveis VITE_SUPABASE_* foram configuradas no build do deploy.'
+      );
 
       if (error) throw error;
 

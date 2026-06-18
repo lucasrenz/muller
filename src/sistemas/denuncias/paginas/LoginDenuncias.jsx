@@ -47,14 +47,21 @@ const LoginDenuncias = () => {
       return;
     }
 
-    setLoading(true);
-    const { error } = await login(form.email, form.password, 'denuncias');
+    try {
+      setLoading(true);
+      const { error } = await login(form.email, form.password, 'denuncias');
 
-    if (error) {
+      if (error) {
+        setErro(error.message || 'Nao foi possivel entrar. Verifique seus dados.');
+        return;
+      }
+
+      navigate('/denuncias/painel', { replace: true });
+    } catch (error) {
       setErro(error.message || 'Nao foi possivel entrar. Verifique seus dados.');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleChange = (e) => {
