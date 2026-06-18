@@ -5,6 +5,9 @@ import { useToast } from '@/components/ui/use-toast';
 const AuthContext = createContext(undefined);
 const AUTH_TIMEOUT_MS = 20000;
 const AUTH_DEBUG = true;
+const PROFILE_TABLE_FALLBACK_ENABLED = Boolean(
+  import.meta.env.DEV || import.meta.env.VITE_AUTH_PROFILE_TABLE_FALLBACK === 'true'
+);
 
 const getCurrentPath = () => (typeof window !== 'undefined' ? window.location.pathname : '');
 
@@ -53,6 +56,13 @@ const authError = (event, error, payload = {}) => {
   });
 };
 
+const getRpcErrorMessage = (error) => (
+  error?.message
+  || error?.details
+  || error?.hint
+  || String(error)
+);
+
 const getAuthSupabase = (moduleName) => (
   moduleName ? getSupabaseClientByModule(moduleName) : getSupabaseClientByPath()
 );
@@ -80,7 +90,12 @@ const withTimeout = (promise, message, label) => {
 };
 
 const fetchUserProfile = async (userId, supabaseClient) => {
-  authLog('fetchUserProfile:start', { userId });
+  authLog('fetchUserProfile:start', {
+    userId,
+    tableFallbackEnabled: PROFILE_TABLE_FALLBACK_ENABLED,
+  });
+
+  let rpcErrorMessage = '';
 
   try {
     try {
@@ -94,7 +109,10 @@ const fetchUserProfile = async (userId, supabaseClient) => {
 
       authLog('fetchUserProfile:rpc:result', {
         hasData: Boolean(data),
+        code: error?.code || null,
         error: error?.message || null,
+        details: error?.details || null,
+        hint: error?.hint || null,
         tipo: data?.tipo,
         ativo: data?.ativo,
       });
@@ -102,11 +120,34 @@ const fetchUserProfile = async (userId, supabaseClient) => {
       if (!error && data) {
         return data;
       }
-    } catch (rpcError) {
-      authWarn('fetchUserProfile:rpc:fallback', {
-        message: rpcError?.message || String(rpcError),
+
+      if (!error && !data) {
+        authWarn('fetchUserProfile:rpc:no-profile', { userId });
+        return null;
+      }
+
+      rpcErrorMessage = getRpcErrorMessage(error);
+      authWarn('fetchUserProfile:rpc:returned-error', {
+        code: error?.code || null,
+        message: rpcErrorMessage,
+        tableFallbackEnabled: PROFILE_TABLE_FALLBACK_ENABLED,
       });
-      // Fallback abaixo quando a RPC nao existir no banco.
+    } catch (rpcError) {
+      rpcErrorMessage = getRpcErrorMessage(rpcError);
+      authWarn('fetchUserProfile:rpc:fallback', {
+        message: rpcErrorMessage,
+        tableFallbackEnabled: PROFILE_TABLE_FALLBACK_ENABLED,
+      });
+    }
+
+    if (!PROFILE_TABLE_FALLBACK_ENABLED) {
+      authWarn('fetchUserProfile:table:skipped', {
+        reason: 'disabled-in-production',
+        rpcErrorMessage,
+      });
+      throw new Error(
+        `Nao foi possivel buscar o perfil pela RPC get_meu_perfil. ${rpcErrorMessage || 'Verifique se o SQL do modulo de denuncias foi aplicado no Supabase.'}`
+      );
     }
 
     const { data: profileData, error: profileError } = await withTimeout(
