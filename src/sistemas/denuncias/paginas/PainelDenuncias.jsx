@@ -353,6 +353,35 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
 
           {/* Ações */}
           <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="relative" ref={actionsRef}>
+              <button
+                onClick={() => setActionsOpen(o => !o)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors"
+                title="Alterar status"
+              >
+                <MoreVertical className="h-5 w-5" />
+              </button>
+              {actionsOpen && (
+                <div className="absolute right-0 top-full z-20 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+                  <div className="flex flex-col p-1">
+                    <p className="px-3 py-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">Alterar status</p>
+                    {STATUS_ORDER.map(s => {
+                      const cfg  = STATUS_CONFIG[s];
+                      const Icon = cfg.icon;
+                      return (
+                        <button key={s} onClick={() => handleQuickStatus(s)}
+                          className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-colors ${editStatus === s ? `${cfg.bg} ${cfg.text} font-semibold` : 'text-slate-700 hover:bg-slate-50'}`}
+                        >
+                          <Icon className={`h-4 w-4 ${editStatus === s ? cfg.text : 'text-slate-400'}`} />
+                          {cfg.label}
+                          {editStatus === s && <CheckCircle2 className={`h-3.5 w-3.5 ml-auto ${cfg.text}`} />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
             <button onClick={onClose}
               className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors"
               title="Fechar"
@@ -362,35 +391,21 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
           </div>
         </div>
 
-        {/* Status, prioridade + salvar */}
-        <div className="flex items-end justify-between gap-4 px-6 pb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0">
-            <label className="space-y-1.5">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Prioridade</span>
-              <div className="relative">
+        {/* Prioridade + salvar */}
+        <div className="flex items-center justify-between gap-4 px-6 pb-4">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Prioridade</span>
+            <div className="relative">
               <select
                 value={editPriority}
                 onChange={e => setEditPriority(e.target.value)}
-                className="min-w-[12rem] appearance-none rounded-xl border border-slate-200 bg-white pl-3 pr-8 py-2 text-sm font-medium text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 focus:outline-none"
+                className="appearance-none rounded-xl border border-slate-200 bg-white pl-3 pr-7 py-1.5 text-sm font-medium text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 focus:outline-none"
               >
                 {PRIORITY_ORDER.map(p => <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>)}
               </select>
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
-              </div>
-            </label>
-            <label className="space-y-1.5">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
-              <div className="relative">
-                <select
-                  value={editStatus}
-                  onChange={e => setEditStatus(e.target.value)}
-                  className="min-w-[12rem] appearance-none rounded-xl border border-slate-200 bg-white pl-3 pr-8 py-2 text-sm font-medium text-slate-900 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 focus:outline-none"
-                >
-                  {STATUS_ORDER.map(s => <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>)}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
-              </div>
-            </label>
+            </div>
+            <span className="text-xs text-slate-400">Recebida {formatDate(denuncia.created_at)}</span>
           </div>
           {hasChanges && (
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -550,97 +565,34 @@ function DenunciaDrawer({ denuncia, onClose, onUpdated, perfil }) {
 
             {/* ANEXOS */}
             {activeTab === 'anexos' && (
-              <div className="p-6">
+              <div className="p-6 space-y-3">
                 {anexos.length === 0 && (
                   <DrawerEmpty icon={Paperclip} text="Nenhum anexo foi enviado para esta denúncia." />
                 )}
-                {anexos.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {anexos.map(a => (
-                      <button
-                        key={a.id}
-                        type="button"
-                        onClick={() => setPreviewAnexo(a)}
-                        className="group overflow-hidden rounded-2xl border border-slate-200/70 bg-white text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md"
-                      >
-                        <div className="relative aspect-[4/3] bg-slate-100">
-                          {isImageFile(a.tipo_arquivo) ? (
-                            <img src={a.url_arquivo} alt={a.nome_arquivo} className="h-full w-full object-cover" />
-                          ) : (
-                            <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-slate-400">
-                              <span className="text-5xl">{fileIcon(a.tipo_arquivo)}</span>
-                              {isAudioFile(a.tipo_arquivo) && <span className="text-xs font-semibold uppercase tracking-[0.08em]">Áudio</span>}
-                              {isPdfFile(a.tipo_arquivo) && <span className="text-xs font-semibold uppercase tracking-[0.08em]">PDF</span>}
-                            </div>
-                          )}
-                          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/0 opacity-0 transition-all group-hover:bg-slate-950/35 group-hover:opacity-100">
-                            <span className="rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-900 shadow-sm">Abrir</span>
-                          </div>
-                        </div>
-                        <div className="space-y-1 px-4 py-3">
-                          <p className="truncate text-sm font-semibold text-slate-900">{a.nome_arquivo}</p>
-                          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
-                            {a.tamanho_bytes > 0 && <span>{formatBytes(a.tamanho_bytes)}</span>}
-                            <span>{a.enviado_por === 'interno' ? 'Interno' : 'Denunciante'}</span>
-                            <span>{formatDate(a.created_at)}</span>
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {previewAnexo && (
-              <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm" onClick={() => setPreviewAnexo(null)}>
-                <div className="relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-bold text-slate-900">{previewAnexo.nome_arquivo}</p>
-                      <p className="text-xs text-slate-500">{previewAnexo.tamanho_bytes > 0 ? formatBytes(previewAnexo.tamanho_bytes) : 'Anexo'}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={previewAnexo.url_arquivo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 px-3 text-xs font-semibold text-slate-600 hover:border-orange-200 hover:text-orange-600"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        Abrir
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => setPreviewAnexo(null)}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex min-h-[22rem] flex-1 items-center justify-center bg-slate-100 p-4">
-                    {isImageFile(previewAnexo.tipo_arquivo) ? (
-                      <img src={previewAnexo.url_arquivo} alt={previewAnexo.nome_arquivo} className="max-h-[76vh] max-w-full rounded-xl object-contain shadow-lg" />
-                    ) : isAudioFile(previewAnexo.tipo_arquivo) ? (
-                      <div className="w-full max-w-2xl rounded-2xl bg-white p-8 shadow-sm">
-                        <div className="mb-5 text-center text-5xl">{fileIcon(previewAnexo.tipo_arquivo)}</div>
-                        <audio controls src={previewAnexo.url_arquivo} className="w-full" />
+                {anexos.map(a => (
+                  <div key={a.id} className="flex items-center gap-4 rounded-xl border border-slate-200/60 bg-white px-4 py-3.5 hover:border-orange-200 hover:shadow-sm transition-all">
+                    <span className="text-2xl flex-shrink-0">{fileIcon(a.tipo_arquivo)}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-slate-900 truncate">{a.nome_arquivo}</p>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        {a.tamanho_bytes > 0 && <span className="text-xs text-slate-400">{formatBytes(a.tamanho_bytes)}</span>}
+                        <span className="text-xs text-slate-300">·</span>
+                        <span className="text-xs text-slate-400">{a.enviado_por === 'interno' ? 'Interno' : 'Denunciante'}</span>
+                        <span className="text-xs text-slate-300">·</span>
+                        <span className="text-xs text-slate-400">{formatDate(a.created_at)}</span>
                       </div>
-                    ) : isPdfFile(previewAnexo.tipo_arquivo) ? (
-                      <iframe title={previewAnexo.nome_arquivo} src={previewAnexo.url_arquivo} className="h-[76vh] w-full rounded-xl border border-slate-200 bg-white" />
-                    ) : (
-                      <div className="rounded-2xl bg-white p-8 text-center shadow-sm">
-                        <div className="mb-4 text-5xl">{fileIcon(previewAnexo.tipo_arquivo)}</div>
-                        <p className="mb-4 text-sm font-semibold text-slate-700">Prévia indisponível para este tipo de arquivo.</p>
-                        <a href={previewAnexo.url_arquivo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700">
-                          <ExternalLink className="h-4 w-4" />
-                          Abrir arquivo
-                        </a>
-                      </div>
-                    )}
+                    </div>
+                    <a
+                      href={a.url_arquivo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-orange-600 hover:border-orange-200 transition-colors"
+                      title="Abrir arquivo"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
                   </div>
-                </div>
+                ))}
               </div>
             )}
 
@@ -853,7 +805,7 @@ const OperatorJuridico = () => {
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
       <Helmet>
-        <title>Jurídico | Whistleblowing System</title>
+        <title>Jurídico | Restrito</title>
         <meta name="description" content="Painel do operador jurídico" />
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
       </Helmet>
@@ -1085,10 +1037,10 @@ const OperatorJuridico = () => {
                               <td className="px-6 py-4 text-right">
                                 <button
                                   onClick={e => { e.stopPropagation(); setSelected(d); setDrawerOpen(true); }}
-                                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-orange-600 hover:border-orange-200 hover:bg-orange-50 transition-colors"
-                                  title="Abrir denúncia"
+                                  className="text-slate-400 hover:text-orange-600"
+                                  title="Abrir detalhes"
                                 >
-                                  <ArrowUpRight className="h-4 w-4" />
+                                  <MoreVertical className="h-5 w-5" />
                                 </button>
                               </td>
                             </tr>
@@ -1126,7 +1078,7 @@ const OperatorJuridico = () => {
                   </div>
                   {activeCase && (
                     <button
-                      onClick={() => { setSelected(activeCase); setDrawerOpen(true); }}
+                      onClick={() => setDrawerOpen(true)}
                       className="p-2 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-orange-600"
                       title="Abrir painel completo"
                     >
@@ -1179,7 +1131,7 @@ const OperatorJuridico = () => {
                       <div className="space-y-4">
                         <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Ações</label>
                         <button
-                          onClick={() => { setSelected(activeCase); setDrawerOpen(true); }}
+                          onClick={() => setDrawerOpen(true)}
                           className="w-full px-4 py-2.5 bg-orange-600 text-white font-semibold text-sm rounded-lg hover:bg-orange-700 transition-all active:scale-95 shadow-lg shadow-orange-600/20"
                         >
                           Abrir Fluxo Completo
