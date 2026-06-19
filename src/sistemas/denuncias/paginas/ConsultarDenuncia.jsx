@@ -23,10 +23,12 @@ function getEtapaAtual(status) {
   return ETAPAS.findIndex(e => e.statuses.includes(status));
 }
 
-function maskProtocolo(value) {
-  const digits = value.replace(/\D/g, '').slice(0, 8);
-  if (digits.length <= 4) return digits;
-  return digits.slice(0, 4) + '-' + digits.slice(4);
+function normalizeProtocolo(value) {
+  return value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 32);
+}
+
+function normalizeCodigoAcesso(value) {
+  return value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 16);
 }
 
 function formatarData(iso) {
@@ -184,11 +186,14 @@ export default function ConsultarDenunciaPage() {
                       id="protocolo"
                       className="denuncia-input"
                       type="text"
-                      placeholder="Ex: 2026-1234"
+                      placeholder="Ex: 2026-1234 ou ABC123"
                       value={protocolo}
-                      onChange={e => setProtocolo(maskProtocolo(e.target.value))}
-                      inputMode="numeric"
-                      maxLength={9}
+                      onChange={e => setProtocolo(normalizeProtocolo(e.target.value))}
+                      inputMode="text"
+                      autoCapitalize="characters"
+                      autoComplete="off"
+                      maxLength={32}
+                      style={{ textTransform: 'uppercase' }}
                     />
                   </div>
 
@@ -200,11 +205,13 @@ export default function ConsultarDenunciaPage() {
                         id="codigo"
                         className="denuncia-input"
                         type={mostrarCodigo ? 'text' : 'password'}
-                        placeholder="123456"
+                        placeholder="123456 ou ABC123"
                         value={codigo}
-                        onChange={e => setCodigo(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                        inputMode="numeric"
-                        maxLength={6}
+                        onChange={e => setCodigo(normalizeCodigoAcesso(e.target.value))}
+                        inputMode="text"
+                        autoCapitalize="characters"
+                        autoComplete="off"
+                        maxLength={16}
                         style={{ paddingRight: '3rem', textTransform: 'uppercase' }}
                       />
                       <button
